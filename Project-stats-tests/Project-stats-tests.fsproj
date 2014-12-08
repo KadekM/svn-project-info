@@ -5,14 +5,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>bbc40ca5-3b82-4d18-bb38-6dec8a6ebf0e</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Project_stats</RootNamespace>
-    <AssemblyName>Project_stats</AssemblyName>
+    <ProjectGuid>b1845c11-3bd2-428e-acd0-3e3b0b8ab6ba</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Project_stats_tests</RootNamespace>
+    <AssemblyName>Project_stats_tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.3.1.0</TargetFSharpCoreVersion>
-    <Name>Project-stats</Name>
+    <Name>Project-stats-tests</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,9 +21,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\Project_stats.XML</DocumentationFile>
-    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\Project_stats_tests.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,10 +30,33 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\Project_stats.XML</DocumentationFile>
-    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>bin\Release\Project_stats_tests.XML</DocumentationFile>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FsCheck">
+      <HintPath>..\packages\FsCheck.1.0.3\lib\net45\FsCheck.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Library1.fs" />
+    <None Include="packages.config" />
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Project-stats\Project-stats.fsproj">
+      <Name>Project-stats</Name>
+      <Project>{bbc40ca5-3b82-4d18-bb38-6dec8a6ebf0e}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>
@@ -53,28 +73,6 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
-  <ItemGroup>
-    <Compile Include="CommandLine.fs" />
-    <Compile Include="Program.fs" />
-    <None Include="App.config" />
-    <Content Include="sample-log.xml" />
-    <None Include="packages.config" />
-    <None Include="Playground.fsx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="FSharp.Data">
-      <HintPath>..\packages\FSharp.Data.2.1.0\lib\net40\FSharp.Data.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
