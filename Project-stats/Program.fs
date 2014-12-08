@@ -15,7 +15,6 @@ let main argv =
     procInfo.CreateNoWindow <- true
     procInfo.UseShellExecute <- false
     
-    printfn "%A" (procInfo.FileName)
     let proc = new System.Diagnostics.Process()
     proc.StartInfo <- procInfo
     proc.Start() |> ignore
