@@ -10,6 +10,11 @@ let main argv =
 
     let log = LogProvider.Load "log.xml"
 
+    let path = System.Environment.GetEnvironmentVariable("PATH").Split(';') |> Seq.map(fun x -> System.IO.Path.Combine(x, "svn.exe")) |> Seq.where System.IO.File.Exists|> Seq.head
+    let procInfo = System.Diagnostics.ProcessStartInfo(path, "--xml")
+    
+    System.Diagnostics.Process.Start(procInfo)
+
     let commitsFrom author = log.Logentries |> Seq.where (fun x -> x.Author = author)
 
     let authors = [| "marek.kadek"; "martin.kolinek"; "vladimir.pavelka"; "marek.sedlacek"; "robert.herceg"; "branislav.pavelka" |]
