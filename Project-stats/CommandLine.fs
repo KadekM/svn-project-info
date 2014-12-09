@@ -1,16 +1,17 @@
 ﻿module CommandLine
 
 (*
--ssr / --set-svn-repository - svn repository
-
+-ssr / --set-svn-repository: svn repository
+-f / --from: commits only from
+-u / --until: commits only until
 *)
 
 type SvnRepositoryOption = | SvnRepositoryOption of string
 
 type CommandLineOptions = {
     svn: Option<SvnRepositoryOption>;
-    from: Option<System.DateTimeOffset>;
-    until: Option<System.DateTimeOffset>;
+    from: Option<System.DateTime>;
+    until: Option<System.DateTime>;
 }
 
 let defaultCommandLineOptions = { svn = None; from = None; until = None }
@@ -25,12 +26,12 @@ let rec parseCommandLineRec args options =
         match x with
         | Prefix "-ssr=" url | Prefix "--set-svn-repository=" url -> {options with svn=Some(SvnRepositoryOption(url)) } |> parseCommandLineRec xs
         | Prefix "-f=" date | Prefix "--from=" date ->
-             match System.DateTimeOffset.TryParse date with
+             match System.DateTime.TryParse date with
              | true, parsed -> {options with from=Some(parsed) } |> parseCommandLineRec xs
              | false, _ -> printfn "Invalid date %A" date
                            options
         | Prefix "-u=" date | Prefix "--until=" date ->
-             match System.DateTimeOffset.TryParse date with
+             match System.DateTime.TryParse date with
              | true, parsed -> {options with from=Some(parsed) } |> parseCommandLineRec xs
              | false, _ -> printfn "Invalid date %A" date
                            options

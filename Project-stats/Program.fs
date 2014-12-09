@@ -27,12 +27,20 @@ let main argv =
 
         let log = LogProvider.Parse(proc.StandardOutput.ReadToEnd())
     
-        let commitsFrom author = log.Logentries |> Seq.where (fun x -> x.Author = author)
+        let commitsFrom author from until = 
+            let all = log.Logentries |> Seq.where (fun x -> x.Author = author)
+            let fromFiltered = match from with
+                | Some date -> all |> Seq.where (fun x -> x.Date >= date)
+                | None -> all
+            let untilFiltered = match until with
+                | Some date -> fromFiltered |> Seq.where (fun x -> x.Date <= date)
+                | None -> fromFiltered
+            untilFiltered
     
         let authors = [| "marek.kadek"; "martin.kolinek"; "vladimir.pavelka"; "marek.sedlacek"; "robert.herceg"; "branislav.pavelka" |]
 
         authors 
-        |> Seq.map (fun x -> (x, commitsFrom x |> Seq.length ) ) 
+        |> Seq.map (fun x -> (x, commitsFrom x options.from options.until |> Seq.length ) ) 
         |> Seq.sortBy(fun (_, amount) -> amount) 
         |> Seq.iter (fun (author, commits) -> printfn "%A : %A" author commits)
 
