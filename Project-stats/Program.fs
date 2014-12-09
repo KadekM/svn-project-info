@@ -31,6 +31,10 @@ let main argv =
     
         let authors = [| "marek.kadek"; "martin.kolinek"; "vladimir.pavelka"; "marek.sedlacek"; "robert.herceg"; "branislav.pavelka" |]
 
-        authors |> Seq.map (fun x -> (x, commitsFrom x |> Seq.length ) ) |> Seq.sortBy(fun (_, amount) -> amount) |> Seq.iter (fun (author, commits) -> printfn "%A : %A" author commits)
+        authors 
+        |> Seq.map (fun x -> (x, commitsFrom x |> Seq.length ) ) 
+        |> Seq.sortBy(fun (_, amount) -> amount) 
+        |> Seq.iter (fun (author, commits) -> printfn "%A : %A" author commits)
+
     System.Console.ReadKey() |> ignore
     0
