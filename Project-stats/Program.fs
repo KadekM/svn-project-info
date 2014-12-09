@@ -16,7 +16,7 @@ let main argv =
     | Some (SvnRepositoryOption repo) ->
         let procInfo = System.Diagnostics.ProcessStartInfo(path)
         let arguments = 
-            let def = "log " + repo + " --xml"
+            let def = "log " + repo + " --xml --non-interactive"
             let username = 
                 match options.username with
                 | Some usern -> "--username " + usern
@@ -37,24 +37,29 @@ let main argv =
         proc.StartInfo <- procInfo
         proc.Start() |> ignore
 
-        let log = LogProvider.Parse(proc.StandardOutput.ReadToEnd())
+        let someLog = 
+            try Some <| LogProvider.Parse(proc.StandardOutput.ReadToEnd())
+            with _ -> None
     
-        let commitsFrom author from until = 
-            let all = log.Logentries |> Seq.where (fun x -> x.Author = author)
-            let fromFiltered = match from with
-                | Some date -> all |> Seq.where (fun x -> x.Date >= date)
-                | None -> all
-            let untilFiltered = match until with
-                | Some date -> fromFiltered |> Seq.where (fun x -> x.Date <= date)
-                | None -> fromFiltered
-            untilFiltered
+        match someLog with
+        | None -> printfn "Failed to load xml"
+        | Some log ->
+            let commitsFrom author from until = 
+                let all = log.Logentries |> Seq.where (fun x -> x.Author = author)
+                let fromFiltered = match from with
+                    | Some date -> all |> Seq.where (fun x -> x.Date >= date)
+                    | None -> all
+                let untilFiltered = match until with
+                    | Some date -> fromFiltered |> Seq.where (fun x -> x.Date <= date)
+                    | None -> fromFiltered
+                untilFiltered
     
-        let authors = [| "marek.kadek"; "martin.kolinek"; "vladimir.pavelka"; "marek.sedlacek"; "robert.herceg"; "branislav.pavelka" |]
+            let authors = [| "marek.kadek"; "martin.kolinek"; "vladimir.pavelka"; "marek.sedlacek"; "robert.herceg"; "branislav.pavelka" |]
 
-        authors 
-        |> Seq.map (fun x -> (x, commitsFrom x options.from options.until |> Seq.length ) ) 
-        |> Seq.sortBy(fun (_, amount) -> amount) 
-        |> Seq.iter (fun (author, commits) -> printfn "%A : %A" author commits)
+            authors 
+            |> Seq.map (fun x -> (x, commitsFrom x options.from options.until |> Seq.length ) ) 
+            |> Seq.sortBy(fun (_, amount) -> amount) 
+            |> Seq.iter (fun (author, commits) -> printfn "%A : %A" author commits)
 
     System.Console.ReadKey() |> ignore
     0
