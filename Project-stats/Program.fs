@@ -10,7 +10,7 @@ let main argv =
     let options = defaultCommandLineOptions |> parseCommandLineRec (argv |> Array.toList)
 
     let path = System.Environment.GetEnvironmentVariable("PATH").Split(';') |> Seq.map(fun x -> System.IO.Path.Combine(x, "svn.exe")) |> Seq.where System.IO.File.Exists|> Seq.head
-    let repo = argv.[0]
+    let (SvnRepositoryOption repo) = options.svn
     let procInfo = System.Diagnostics.ProcessStartInfo(path)
     procInfo.Arguments <- "log " + repo + " --xml"
     procInfo.WorkingDirectory <- System.Environment.CurrentDirectory

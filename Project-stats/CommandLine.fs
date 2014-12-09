@@ -11,7 +11,6 @@ type CommandLineOptions = {
     svn: SvnRepositoryOption;
 }
 
-
 let defaultCommandLineOptions = { svn = SvnRepositoryOption("none") }
 
 let (|Prefix|_|) (p: string) (s: string) =
