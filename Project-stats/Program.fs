@@ -15,7 +15,19 @@ let main argv =
     | None -> printfn "SVN repo not set"
     | Some (SvnRepositoryOption repo) ->
         let procInfo = System.Diagnostics.ProcessStartInfo(path)
-        procInfo.Arguments <- "log " + repo + " --xml"
+        let arguments = 
+            let def = "log " + repo + " --xml"
+            let username = 
+                match options.username with
+                | Some usern -> "--username " + usern
+                |_ -> ""
+            let password = 
+                match options.password with
+                | Some passwd -> "--password " + passwd
+                | _ -> ""
+            def + username + password
+        
+        procInfo.Arguments <- arguments
         procInfo.WorkingDirectory <- System.Environment.CurrentDirectory
         procInfo.RedirectStandardOutput <- true
         procInfo.CreateNoWindow <- true
