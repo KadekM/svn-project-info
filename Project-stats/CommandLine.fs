@@ -39,8 +39,8 @@ let rec parseCommandLineRec args (options:CommandLineOptions) =
              | true, parsed -> {options with from=Some(parsed) } |> parseCommandLineRec xs
              | false, _ -> printfn "Invalid date %A" date
                            options
-        | Prefix "-lu" username | Prefix "--login-username" username -> {options with username=Some(username) } |> parseCommandLineRec xs
-        | Prefix "-lp" password | Prefix "--login-password" password -> {options with password=Some(password) } |> parseCommandLineRec xs
+        | Prefix "-lu" username | Prefix "--login-username=" username -> {options with username=Some(username) } |> parseCommandLineRec xs
+        | Prefix "-lp" password | Prefix "--login-password=" password -> {options with password=Some(password) } |> parseCommandLineRec xs
         | arg -> printfn "Argument %s is not known" arg
                  options |> parseCommandLineRec xs
     | _ -> options

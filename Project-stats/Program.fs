@@ -16,17 +16,19 @@ let main argv =
     | Some (SvnRepositoryOption repo) ->
         let procInfo = System.Diagnostics.ProcessStartInfo(path)
         let arguments = 
-            let def = "log " + repo + " --xml --non-interactive"
+            let def = "log " + repo + " --xml --non-interactive "
             let username = 
                 match options.username with
-                | Some usern -> "--username " + usern
+                | Some usern -> " --username " + usern
                 |_ -> ""
             let password = 
                 match options.password with
-                | Some passwd -> "--password " + passwd
+                | Some passwd -> " --password " + passwd
                 | _ -> ""
             def + username + password
         
+        printfn "XML: %A" arguments
+
         procInfo.Arguments <- arguments
         procInfo.WorkingDirectory <- System.Environment.CurrentDirectory
         procInfo.RedirectStandardOutput <- true
@@ -37,8 +39,10 @@ let main argv =
         proc.StartInfo <- procInfo
         proc.Start() |> ignore
 
+        let xml = proc.StandardOutput.ReadToEnd()
+        
         let someLog = 
-            try Some <| LogProvider.Parse(proc.StandardOutput.ReadToEnd())
+            try Some <| LogProvider.Parse(xml)
             with _ -> None
     
         match someLog with
